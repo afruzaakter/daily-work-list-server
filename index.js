@@ -22,7 +22,13 @@ async function run(){
         console.log("DB Connected");
         const workCollection = client.db('toDoWorkList').collection('work');
         const deleteCollection = client.db('toDoWorkList').collection('completed');
-
+       
+          // POST Task: add a new Task
+          app.post('/work', async (req, res) => {
+            const newWork = req.body;
+            const result = await workCollection.insertOne(newWork);
+            res.send(result)
+        });
         // get All Tasks
         app.get('/work', async (req, res) => {
             const query = {};
@@ -47,7 +53,27 @@ async function run(){
             res.send(deletedTask)
         })
 
+          // POST : Deleted/completed Task
+          app.post('/completed', async (req, res) => {
+            const newWork = req.body;
+            const result = await deleteCollection.insertOne(newWork);
+            res.send(result)
+        });
 
+           // Update Tasks
+        app.put('/work/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedWork = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    name: updatedWork.name
+                }
+            };
+            const result = await workCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
 
 
 
