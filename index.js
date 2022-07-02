@@ -61,19 +61,21 @@ async function run(){
         });
 
            // Update Tasks
-        app.put('/work/:id', async (req, res) => {
+           app.put('/work/:id', async(req, res) =>{
             const id = req.params.id;
-            const updatedWork = req.body;
-            const filter = { _id: ObjectId(id) };
-            const options = { upsert: true };
-            const updatedDoc = {
+            // console.log(id);
+            const update = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
                 $set: {
-                    name: updatedWork.name
+                    name: update.name,                                      
                 }
-            };
-            const result = await workCollection.updateOne(filter, updatedDoc, options);
+            };     
+            const result = await billCollection.updateOne(filter, updateDoc, options);
             res.send(result);
-        })
+    
+        });
 
 
 
